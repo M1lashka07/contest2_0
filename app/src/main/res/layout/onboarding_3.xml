@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/onboarding_3">
+    android:id="@+id/onboarding_3"
+    tools:context=".onboarding_3">
 
     <ImageView
         android:layout_width="380dp"
@@ -86,6 +87,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <android.widget.Button
+            android:id="@+id/sign_up_onb_3"
             android:layout_width="342dp"
             android:layout_height="48dp"
             android:layout_marginBottom="36dp"
