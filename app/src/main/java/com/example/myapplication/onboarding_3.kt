@@ -19,7 +19,7 @@ class onboarding_3 : AppCompatActivity() {
         }
 
         findViewById<android.widget.Button>(R.id.sign_up_onb_3).setOnClickListener {
-            var intent = Intent(this, holder::class.java)
+            var intent = Intent(this, sign_up::class.java)
             startActivity(intent)
         }
 
