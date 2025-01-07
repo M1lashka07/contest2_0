@@ -220,6 +220,8 @@
             android:layout_marginBottom="36dp"
             android:background="@drawable/shape_button_empty"
             android:text="Sign Up"
+            android:textSize="16sp"
+            android:fontFamily="@font/roboto_bold"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
