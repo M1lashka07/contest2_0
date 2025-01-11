@@ -5,13 +5,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.myapplication.databinding.HolderBinding
-import com.example.myapplication.databinding.Onboarding4Binding
+import com.example.myapplication.databinding.HomeBinding
 
-class holder : AppCompatActivity() {
+class home : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = HolderBinding.inflate(layoutInflater)
+        val binding = HomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
     }
 }
