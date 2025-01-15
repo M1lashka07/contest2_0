@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/onboarding_3"
-    tools:context=".onboarding_3">
+    tools:context=".Onboarding3">
 
     <ImageView
         android:layout_width="380dp"

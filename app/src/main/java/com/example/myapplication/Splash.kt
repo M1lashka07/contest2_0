@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-class splash : AppCompatActivity() {
+class Splash : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -23,7 +23,7 @@ class splash : AppCompatActivity() {
             override fun onTick(p0: Long) {}
 
             override fun onFinish() {
-                val intent = Intent(this@splash, onboarding_1::class.java)
+                val intent = Intent(this@Splash, Onboarding1::class.java)
                 startActivity(intent)
                 finish()
             }
