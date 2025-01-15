@@ -24,6 +24,8 @@ class SignUp : AppCompatActivity() {
     private lateinit var hintConfPass : ImageButton
     private lateinit var signUpButton : Button
     private lateinit var toLogIn : TextView
+    private var isPasswordVisible = false
+    private var isConfPasswordVisible = false
 
     private val textWatcher = object : TextWatcher {             //Метод, отслеживающий ввод текста в строку
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -55,6 +57,26 @@ class SignUp : AppCompatActivity() {
         return email.matches(emailPattern.toRegex())
     }
 
+    private fun togglePasswordVisibility() {
+        isPasswordVisible = !isPasswordVisible
+
+        if (isPasswordVisible) {
+            pass.inputType = 1
+        } else {
+            pass.inputType = 129 }
+        pass.setSelection(pass.text.length)}
+
+    private fun toggleConfPasswordVisibility() {
+        isConfPasswordVisible = !isConfPasswordVisible
+
+        if (isConfPasswordVisible) {
+            confPass.inputType = 1
+
+        } else {
+            confPass.inputType = 129
+        }
+        confPass.setSelection(confPass.text.length)}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = SignUpEmptyBinding.inflate(layoutInflater)
@@ -71,6 +93,9 @@ class SignUp : AppCompatActivity() {
         signUpButton = binding.signUpButton
         toLogIn = binding.logInTvSignup
 
+        pass.inputType = 129
+        confPass.inputType = 129
+
         val fields = listOf(name, phone, email, pass, confPass, policy)
 
         fields.forEach { field ->
@@ -78,6 +103,14 @@ class SignUp : AppCompatActivity() {
                 is EditText -> field.addTextChangedListener(textWatcher)
                 is CheckBox -> field.setOnCheckedChangeListener { _, _ -> updateButtonState() }
             }
+        }
+
+        hintPass.setOnClickListener{
+            togglePasswordVisibility()
+        }
+
+        hintConfPass.setOnClickListener{
+            toggleConfPasswordVisibility()
         }
 
         signUpButton.setOnClickListener {
