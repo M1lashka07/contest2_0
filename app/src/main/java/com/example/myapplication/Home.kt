@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.databinding.HomeBinding
@@ -9,6 +10,5 @@ class Home : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = HomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
     }
 }
