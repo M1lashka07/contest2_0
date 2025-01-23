@@ -25,10 +25,10 @@ class LogIn : AppCompatActivity() {
 
     private val textWatcher = object : TextWatcher{
         override fun afterTextChanged(s: Editable?) {}
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             changeButton()
         }
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
 
     private fun changeButton(){
@@ -41,8 +41,7 @@ class LogIn : AppCompatActivity() {
     private fun isAllValid(): Boolean{
         val email1 = isEmailValid(email.text.toString())
         val pass1 = pass.text.toString().isNotEmpty()
-        val savePass1 = savePass.isChecked
-        return email1 && pass1 && savePass1
+        return email1 && pass1
     }
 
     private fun isEmailValid( email : String ): Boolean{
@@ -80,7 +79,6 @@ class LogIn : AppCompatActivity() {
         fields.forEach {
             when(it){
                 is EditText -> it.addTextChangedListener(textWatcher)
-                is CheckBox -> it.setOnCheckedChangeListener{_,_-> changeButton()}
             }
         }
 
