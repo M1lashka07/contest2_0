@@ -9,8 +9,13 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.databinding.SignUpEmptyBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.security.MessageDigest
 
 class SignUp : AppCompatActivity() {
 
@@ -77,7 +82,14 @@ class SignUp : AppCompatActivity() {
         }
         confPass.setSelection(confPass.text.length)}
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private fun hashPassword(password : String): String {
+        val digest = MessageDigest.getInstance("SHA-512")
+        val hashedBytes = digest.digest(password.toByteArray())
+        return hashedBytes.joinToString("") {
+            String.format("%02x", it)}
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {     // Хэшируем пароль
         super.onCreate(savedInstanceState)
         val binding = SignUpEmptyBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -95,6 +107,26 @@ class SignUp : AppCompatActivity() {
 
         pass.inputType = 129
         confPass.inputType = 129
+
+        fun registerUser(){
+            val hashPassword = hashPassword(password = pass.toString())
+            val registerRequest = User(name = name.toString(), phone = phone.toString(), email = email.toString(), password = hashPassword)
+
+            Retrofit.userAPI.registerUser(registerRequest).enqueue(
+                object : Callback<Void>{
+                    override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                        if (response.isSuccessful) {
+                            Toast.makeText(this@SignUp, "Регистрация успешна!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this@SignUp, "Ошибка регистрации", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    override fun onFailure(call: Call<Void>, t: Throwable) {
+                        Toast.makeText(this@SignUp, "Ошибка сети: ${t.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            )
+        }
 
         val fields = listOf(name, phone, email, pass, confPass, policy)
 
@@ -114,6 +146,7 @@ class SignUp : AppCompatActivity() {
         }
 
         signUpButton.setOnClickListener {
+            registerUser()
             val intent = Intent (this, LogIn::class.java)
             startActivity(intent)
         }
