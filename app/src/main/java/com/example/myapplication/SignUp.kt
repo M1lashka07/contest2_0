@@ -9,12 +9,15 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+
 import com.example.myapplication.databinding.SignUpEmptyBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.createSupabaseClient
+import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.postgrest.from
+import kotlinx.coroutines.launch
 import java.security.MessageDigest
 
 class SignUp : AppCompatActivity() {
@@ -29,6 +32,7 @@ class SignUp : AppCompatActivity() {
     private lateinit var hintConfPass : ImageButton
     private lateinit var signUpButton : Button
     private lateinit var toLogIn : TextView
+    private lateinit var supabaseClient : SupabaseClient
     private var isPasswordVisible = false
     private var isConfPasswordVisible = false
 
@@ -108,24 +112,26 @@ class SignUp : AppCompatActivity() {
         pass.inputType = 129
         confPass.inputType = 129
 
-        fun registerUser(){
-            val hashPassword = hashPassword(password = pass.toString())
-            val registerRequest = User(name = name.toString(), phone = phone.toString(), email = email.toString(), password = hashPassword)
+        supabaseClient = createSupabaseClient(
+            supabaseUrl = "https://mrxkqjnchchqgarfcwtb.supabase.co",
+            supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1yeGtxam5jaGNocWdhcmZjd3RiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzczNzg0ODYsImV4cCI6MjA1Mjk1NDQ4Nn0.Pzh0P8CfiNuREUIsJwjytFCXwMlhOSZI7lPNuJQVgck"){
+            install(Postgrest)
+        }
 
-            Retrofit.userAPI.registerUser(registerRequest).enqueue(
-                object : Callback<Void>{
-                    override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                        if (response.isSuccessful) {
-                            Toast.makeText(this@SignUp, "Регистрация успешна!", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(this@SignUp, "Ошибка регистрации", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                    override fun onFailure(call: Call<Void>, t: Throwable) {
-                        Toast.makeText(this@SignUp, "Ошибка сети: ${t.message}", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            )
+        suspend fun createUserInSupabase(name : String, phone : String, email: String, password: String){
+            val userData = mapOf(
+                "name" to name,
+                "phone" to phone,
+                "email" to email,
+                "password" to password,)
+            supabaseClient.from("User").insert(userData)
+        }
+
+        fun onRegisterButtonClick(){
+            val hashedPassword = hashPassword(password = pass.text.toString())
+            lifecycleScope.launch {
+                createUserInSupabase(name = name.text.toString(), phone = phone.text.toString(), email = email.text.toString(), password = hashedPassword)
+            }
         }
 
         val fields = listOf(name, phone, email, pass, confPass, policy)
@@ -146,7 +152,7 @@ class SignUp : AppCompatActivity() {
         }
 
         signUpButton.setOnClickListener {
-            registerUser()
+            onRegisterButtonClick()
             val intent = Intent (this, LogIn::class.java)
             startActivity(intent)
         }
